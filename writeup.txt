@@ -1,0 +1,32 @@
+How might rosbag fit into a debugging process as you work on projects in this class?
+  The capability to record topics makes it easier to examine in-depth interactions
+    with the Neato and the data that it sends. It also lets us recreate the scenarios
+    it experiences (e.g. the commands we give it) so we can recreate issues.
+
+Are there any obvious shortcomings of rosbag as a debugging tool
+  At a glance, it seems to be tedious to record and playback with rviz-- initially,
+    I wasn't able to view any results from my recording when I recorded every topic
+    except for image_raw. Additionally, when I began playing back all the topics,
+    the Neato started moving again how it did before and almost hit a wall before I
+    stopped it.
+
+If you currently have the base_frame set to odom change it to a different value.
+Continue to drive the robot around.  Does the new behavior make sense?
+  When we change the base_frame from odom to base_link or base_laser_link, the
+    visualization changes so that the center is base_link (the robot), which
+    doesn't move. Instead, another point, odom, moves around which represents the
+    original point. This makes sense as looking through the eyes of the robot,
+    instead of looking at the robot.
+
+Modify listener.py script by inserting a sleep inside the subscriber callback.
+What happens when you run this code?  What assumption can you safely make about any code that you put in a sensor callback?  In what ways might the behavior you observe be suboptimal when programming a robot?
+  When I insert the sleep(10), the code pauses for ten seconds after receiving a message.
+    Still, the queue is backed up, so it receives the next message in the queue which is only
+    0.1 second from the last. This means we could examine each message carefully, but we
+    wouldn't be able to interact with the robot in real time.
+
+Modify listener.py again to explicitly specify a queue_size for your subscriber.
+What happens now?  In what scenarios is this behavior good?  In what scenarios is this behavior bad?
+  Now, the program pauses for 10 seconds, but will log the most recent message when it wakes,
+    because it limits the queue size. This is good for knowing the latest message, but will lose
+    a lot of information during sleeps.
